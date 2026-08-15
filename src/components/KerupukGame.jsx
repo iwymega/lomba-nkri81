@@ -166,7 +166,7 @@ export default function KerupukGame({ playerName, region, onExit }) {
     <main className="flex flex-1 flex-col px-4 pb-3">
       {phase === 'countdown' && (
         <section className="flex flex-1 flex-col items-center justify-center text-center">
-          <p className="festival-eyebrow mb-3">Arena 01 • Makan Kerupuk</p>
+          <p className="festival-eyebrow mb-3">Arena 02 • Makan Kerupuk</p>
           <div className="font-game text-[96px] font-black leading-none text-yellow-300 drop-shadow-[0_16px_30px_rgba(0,0,0,0.45)]">
             {countdown}
           </div>
@@ -291,7 +291,7 @@ export default function KerupukGame({ playerName, region, onExit }) {
               id="certificate-kerupuk"
               name={playerName}
               region={region}
-              gameName="Arena 01 • Makan Kerupuk"
+              gameName="Arena 02 • Makan Kerupuk"
               headline="Kerupuk Sprint"
               scoreLabel="Total gigitan"
               scoreValue={score}

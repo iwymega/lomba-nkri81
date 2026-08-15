@@ -929,3 +929,271 @@ input {
   transform: translateX(-50%);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
 }
+
+.merdeka-run-scene {
+  position: relative;
+  overflow: hidden;
+  min-height: 420px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(circle at 50% 8%, rgba(255, 241, 210, 0.18), transparent 18%),
+    linear-gradient(180deg, #611319 0%, #2b1116 55%, #150b0e 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.merdeka-run-sky {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08), transparent 28%),
+    radial-gradient(circle at 50% 12%, rgba(250, 204, 21, 0.18), transparent 18%);
+}
+
+.merdeka-run-stands {
+  position: absolute;
+  top: 92px;
+  width: 112px;
+  height: 170px;
+  opacity: 0.78;
+  background:
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.16) 0 10px, transparent 10px 20px),
+    linear-gradient(180deg, #c81e1e, #7f1d1d);
+}
+
+.merdeka-run-stands-left {
+  left: -16px;
+  transform: skewY(14deg);
+}
+
+.merdeka-run-stands-right {
+  right: -16px;
+  transform: skewY(-14deg);
+}
+
+.merdeka-run-track {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -8px;
+  top: 108px;
+  background: linear-gradient(180deg, #6f161d 0%, #9f1c1c 30%, #d1452c 100%);
+  clip-path: polygon(25% 0, 75% 0, 100% 100%, 0 100%);
+}
+
+.merdeka-run-lanes span {
+  position: absolute;
+  top: 124px;
+  bottom: 16px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.14));
+}
+
+.merdeka-run-lanes span:nth-child(1) { left: 31%; }
+.merdeka-run-lanes span:nth-child(2) { left: 50%; }
+.merdeka-run-lanes span:nth-child(3) { left: 69%; }
+
+.merdeka-run-finish {
+  position: absolute;
+  left: 31%;
+  right: 31%;
+  top: 124px;
+  height: 10px;
+  background:
+    linear-gradient(90deg, #fff 0 16%, #111 16% 32%, #fff 32% 48%, #111 48% 64%, #fff 64% 80%, #111 80% 100%);
+  opacity: 0.9;
+}
+
+.merdeka-run-banner {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 14px;
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+  border-radius: 22px;
+  background: rgba(0, 0, 0, 0.24);
+  padding: 12px;
+  backdrop-filter: blur(12px);
+}
+
+.merdeka-run-toast {
+  position: absolute;
+  left: 50%;
+  top: 84px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  border: 1px solid rgba(248, 113, 113, 0.34);
+  background: rgba(20, 8, 11, 0.82);
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fde68a;
+  backdrop-filter: blur(10px);
+}
+
+.merdeka-run-perspective {
+  position: absolute;
+  inset: 120px 12px 14px;
+}
+
+.merdeka-object {
+  position: absolute;
+  width: 36px;
+  height: 42px;
+  transform-origin: center;
+}
+
+.merdeka-object-hurdle {
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, transparent 0 30%, #f8fafc 30% 36%, transparent 36% 64%, #dc2626 64% 72%, transparent 72%),
+    linear-gradient(90deg, #f8fafc 0 16%, transparent 16% 84%, #f8fafc 84% 100%);
+}
+
+.merdeka-object-bambu {
+  width: 30px;
+  background:
+    linear-gradient(90deg, #eab308 0 18%, transparent 18% 44%, #f59e0b 44% 62%, transparent 62% 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.18), transparent);
+}
+
+.merdeka-object-cone {
+  width: 34px;
+  height: 44px;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: linear-gradient(180deg, #fb923c, #dc2626);
+}
+
+.merdeka-object-kerupuk {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(255,255,255,0.72), transparent 24%),
+    linear-gradient(180deg, #fff4c2, #f1c86a 72%, #d78d2f);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+}
+
+.merdeka-object-flag {
+  width: 34px;
+  height: 34px;
+}
+
+.merdeka-flag-red,
+.merdeka-flag-white {
+  position: absolute;
+  left: 10px;
+  width: 20px;
+  height: 8px;
+}
+
+.merdeka-flag-red {
+  top: 8px;
+  background: #dc2626;
+}
+
+.merdeka-flag-white {
+  top: 16px;
+  background: white;
+}
+
+.merdeka-object-flag::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: #d1d5db;
+}
+
+.merdeka-object-collect {
+  animation: float 1.6s ease-in-out infinite;
+}
+
+.merdeka-runner {
+  position: absolute;
+  bottom: 18px;
+  width: 56px;
+  height: 112px;
+  transition: left 0.14s ease-out, transform 0.18s ease-out;
+}
+
+.merdeka-runner-jump {
+  transform: translateY(-58px) scale(1.02);
+}
+
+.merdeka-runner-head {
+  position: absolute;
+  left: 18px;
+  top: 6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #f2c18e;
+}
+
+.merdeka-runner-band {
+  position: absolute;
+  left: 16px;
+  top: 8px;
+  width: 24px;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #dc2626, #fff);
+}
+
+.merdeka-runner-body {
+  position: absolute;
+  left: 14px;
+  top: 24px;
+  width: 28px;
+  height: 34px;
+  border-radius: 16px 16px 10px 10px;
+  background: linear-gradient(180deg, #dc2626, #991b1b);
+}
+
+.merdeka-runner-leg,
+.merdeka-runner-arm {
+  position: absolute;
+  background: #f2c18e;
+}
+
+.merdeka-runner-leg {
+  top: 56px;
+  width: 8px;
+  height: 36px;
+  border-radius: 999px;
+  animation: jump 0.46s ease-in-out infinite;
+}
+
+.merdeka-runner-leg-left {
+  left: 18px;
+}
+
+.merdeka-runner-leg-right {
+  right: 18px;
+  animation-delay: 0.16s;
+}
+
+.merdeka-runner-arm {
+  top: 30px;
+  width: 7px;
+  height: 28px;
+  border-radius: 999px;
+  animation: jump 0.46s ease-in-out infinite;
+}
+
+.merdeka-runner-arm-left {
+  left: 8px;
+}
+
+.merdeka-runner-arm-right {
+  right: 8px;
+  animation-delay: 0.18s;
+}

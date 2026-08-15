@@ -3,6 +3,7 @@ const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 const LEADERBOARD_TABLE = 'leaderboard_entries';
 
 export const GAME_KEYS = {
+  lari: 'lari',
   kerupuk: 'kerupuk',
   karung: 'karung',
   tarik: 'tarik',

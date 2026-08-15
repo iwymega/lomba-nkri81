@@ -1,12 +1,21 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ChevronLeft, MapPin, Play, Sparkles, Trophy, User } from 'lucide-react';
 import KerupukGame from './components/KerupukGame';
+import MerdekaRunGame from './components/MerdekaRunGame';
 import RelayRaceGame from './components/RelayRaceGame';
 import SackRaceGame from './components/SackRaceGame';
 import TugOfWarGame from './components/TugOfWarGame';
 import { fetchLeaderboard, isLeaderboardConfigured } from './utils/leaderboard';
 
 const GAME_LIBRARY = {
+  lari: {
+    id: 'lari',
+    name: 'Lari Kemerdekaan',
+    emoji: '🏟️',
+    strap: 'Runner stadion 4 lintasan dengan obstacle, bonus item, lompat, dan laju yang terus naik.',
+    highlight: 'Tantangan utama: lane sempit, nyawa terbatas, dan keputusan lompat harus cepat.',
+    component: MerdekaRunGame,
+  },
   kerupuk: {
     id: 'kerupuk',
     name: 'Makan Kerupuk',
@@ -44,7 +53,7 @@ const GAME_LIBRARY = {
 export default function App() {
   const [playerName, setPlayerName] = useState('');
   const [region, setRegion] = useState('');
-  const [selectedGameId, setSelectedGameId] = useState('kerupuk');
+  const [selectedGameId, setSelectedGameId] = useState('lari');
   const [activeGameId, setActiveGameId] = useState(null);
   const [leaderboardByGame, setLeaderboardByGame] = useState({});
   const [leaderboardStatus, setLeaderboardStatus] = useState(
@@ -274,7 +283,7 @@ export default function App() {
 
           <section className="grid grid-cols-3 gap-2">
             <div className="festival-mini-stat">
-              <span>4</span>
+              <span>5</span>
               Arena aktif
             </div>
             <div className="festival-mini-stat">

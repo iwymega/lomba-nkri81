@@ -125,7 +125,7 @@ export default function SackRaceGame({ playerName, region, onExit }) {
     <main className="flex flex-1 flex-col px-4 pb-4">
       {phase === 'countdown' && (
         <section className="flex flex-1 flex-col items-center justify-center text-center">
-          <p className="festival-eyebrow mb-3">Arena 02 • Balap Karung</p>
+          <p className="festival-eyebrow mb-3">Arena 03 • Balap Karung</p>
           <div className="font-game text-[112px] font-black leading-none text-yellow-300">
             {countdown}
           </div>
@@ -187,7 +187,7 @@ export default function SackRaceGame({ playerName, region, onExit }) {
               id="certificate-karung"
               name={playerName}
               region={region}
-              gameName="Arena 02 • Balap Karung"
+              gameName="Arena 03 • Balap Karung"
               headline="Sack Race Dash"
               scoreLabel="Jarak tempuh"
               scoreValue={Math.round(distance)}

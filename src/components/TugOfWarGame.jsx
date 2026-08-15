@@ -139,7 +139,7 @@ export default function TugOfWarGame({ playerName, region, onExit }) {
     <main className="flex flex-1 flex-col px-4 pb-4">
       {phase === 'countdown' && (
         <section className="flex flex-1 flex-col items-center justify-center text-center">
-          <p className="festival-eyebrow mb-3">Arena 03 • Tarik Tambang</p>
+          <p className="festival-eyebrow mb-3">Arena 04 • Tarik Tambang</p>
           <div className="font-game text-[112px] font-black leading-none text-yellow-300">
             {countdown}
           </div>
@@ -201,7 +201,7 @@ export default function TugOfWarGame({ playerName, region, onExit }) {
               id="certificate-tarik"
               name={playerName}
               region={region}
-              gameName="Arena 03 • Tarik Tambang"
+              gameName="Arena 04 • Tarik Tambang"
               headline="Tug of War Pulse"
               scoreLabel="Dominasi tarikan"
               scoreValue={ropeOffset}

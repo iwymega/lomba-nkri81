@@ -91,3 +91,23 @@ export async function playFinishSound() {
   playTone({ frequency: 660, type: 'triangle', duration: 0.08, volume: 0.026, when: 0.08 });
   playTone({ frequency: 880, type: 'square', duration: 0.15, volume: 0.03, when: 0.16, sweepTo: 1040 });
 }
+
+export async function playLaneSound() {
+  await unlockSound();
+  playTone({ frequency: 320, type: 'triangle', duration: 0.08, volume: 0.02, sweepTo: 480 });
+}
+
+export async function playJumpSound() {
+  await unlockSound();
+  playTone({ frequency: 240, type: 'sine', duration: 0.18, volume: 0.026, sweepTo: 650 });
+}
+
+export async function playHitSound() {
+  await unlockSound();
+  playTone({ frequency: 160, type: 'sawtooth', duration: 0.24, volume: 0.02, sweepTo: 35 });
+}
+
+export async function playCoinSound() {
+  await unlockSound();
+  playTone({ frequency: 750, type: 'sine', duration: 0.1, volume: 0.024, sweepTo: 1150 });
+}

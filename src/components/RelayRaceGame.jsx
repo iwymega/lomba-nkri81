@@ -230,7 +230,7 @@ export default function RelayRaceGame({ playerName, region, onExit }) {
     <main className="flex flex-1 flex-col px-4 pb-4">
       {phase === 'countdown' && (
         <section className="flex flex-1 flex-col items-center justify-center text-center">
-          <p className="festival-eyebrow mb-3">Arena 04 • Lari Estafet</p>
+          <p className="festival-eyebrow mb-3">Arena 05 • Lari Estafet</p>
           <div className="font-game text-[112px] font-black leading-none text-yellow-300">
             {countdown}
           </div>
@@ -362,7 +362,7 @@ export default function RelayRaceGame({ playerName, region, onExit }) {
               id="certificate-estafet"
               name={playerName}
               region={region}
-              gameName="Arena 04 • Lari Estafet"
+              gameName="Arena 05 • Lari Estafet"
               headline="Relay Race Supreme"
               scoreLabel="Skor estafet"
               scoreValue={relayScore}
