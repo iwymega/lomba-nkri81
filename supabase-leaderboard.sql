@@ -43,3 +43,15 @@ alter table public.leaderboard_entries
 alter table public.leaderboard_entries
   add constraint leaderboard_entries_score_check
   check (score between -100 and 1000000);
+
+drop policy if exists "public can submit leaderboard score"
+on public.leaderboard_entries;
+
+create policy "public can submit leaderboard score"
+on public.leaderboard_entries
+for insert
+to anon, authenticated
+with check (
+  score between -100 and 1000000
+  and char_length(player_name) between 2 and 32
+);
