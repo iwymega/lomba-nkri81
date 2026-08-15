@@ -5,12 +5,12 @@ import CertificateStory from './CertificateStory';
 import { shareOrDownloadCertificate } from '../utils/exportToImage';
 import { submitScore } from '../utils/leaderboard';
 
-const TOTAL_TIME = 16;
+const TOTAL_TIME = 14;
 
 function getVerdict(tension) {
-  if (tension >= 70) return 'Kapten Tarik Tambang';
-  if (tension >= 45) return 'Juru Tensi Lapangan';
-  if (tension >= 20) return 'Masih Menang Tipis';
+  if (tension >= 78) return 'Kapten Tarik Tambang';
+  if (tension >= 52) return 'Juru Tensi Lapangan';
+  if (tension >= 24) return 'Masih Menang Tipis';
   if (tension >= 0) return 'Pertahanan Cukup Kuat';
   return 'Lawan Terlalu Solid';
 }
@@ -55,7 +55,7 @@ export default function TugOfWarGame({ playerName, region, onExit }) {
 
     const meterTimer = window.setInterval(() => {
       setMeter((prev) => {
-        const next = prev + direction * 9;
+        const next = prev + direction * 13;
         if (next >= 100) {
           setDirection(-1);
           return 100;
@@ -100,8 +100,8 @@ export default function TugOfWarGame({ playerName, region, onExit }) {
   }, [phase, submitState, playerName, region, ropeOffset, perfectHits]);
 
   const zone = useMemo(() => {
-    if (meter >= 42 && meter <= 58) return 'perfect';
-    if (meter >= 30 && meter <= 70) return 'good';
+    if (meter >= 46 && meter <= 54) return 'perfect';
+    if (meter >= 36 && meter <= 64) return 'good';
     return 'miss';
   }, [meter]);
 
@@ -109,12 +109,12 @@ export default function TugOfWarGame({ playerName, region, onExit }) {
     if (phase !== 'playing') return;
 
     if (zone === 'perfect') {
-      setRopeOffset((prev) => Math.min(100, prev + 10));
+      setRopeOffset((prev) => Math.min(100, prev + 9));
       setPerfectHits((prev) => prev + 1);
     } else if (zone === 'good') {
-      setRopeOffset((prev) => Math.min(100, prev + 5));
+      setRopeOffset((prev) => Math.min(100, prev + 3));
     } else {
-      setRopeOffset((prev) => Math.max(-100, prev - 7));
+      setRopeOffset((prev) => Math.max(-100, prev - 11));
     }
   };
 

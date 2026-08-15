@@ -5,7 +5,7 @@ import CertificateStory from './CertificateStory';
 import { shareOrDownloadCertificate } from '../utils/exportToImage';
 import { submitScore } from '../utils/leaderboard';
 
-const TOTAL_TIME = 18;
+const TOTAL_TIME = 15;
 const CRACKER_COUNT = 9;
 
 function clamp(value, min, max) {
@@ -13,10 +13,10 @@ function clamp(value, min, max) {
 }
 
 function getVerdict(score) {
-  if (score >= 120) return 'Legenda Kerupuk Gantung';
-  if (score >= 90) return 'Bintang Panggung Sore';
-  if (score >= 65) return 'Jagoan Habis Sebelum Senja';
-  if (score >= 40) return 'Makin Panas, Makin Mantap';
+  if (score >= 95) return 'Legenda Kerupuk Gantung';
+  if (score >= 72) return 'Bintang Panggung Sore';
+  if (score >= 50) return 'Jagoan Habis Sebelum Senja';
+  if (score >= 30) return 'Makin Panas, Makin Mantap';
   return 'Pemanasan Belum Kelar';
 }
 
@@ -62,7 +62,7 @@ export default function KerupukGame({ playerName, region, onExit }) {
         return prev - 1;
       });
 
-      setFeverProgress((prev) => clamp(prev - 18, 0, 100));
+      setFeverProgress((prev) => clamp(prev - 24, 0, 100));
     }, 1000);
 
     return () => window.clearInterval(timer);
@@ -122,21 +122,21 @@ export default function KerupukGame({ playerName, region, onExit }) {
     const timeDiff = now - lastTapTime.current;
     lastTapTime.current = now;
 
-    const isFastTap = timeDiff > 0 && timeDiff < 170;
+    const isFastTap = timeDiff > 0 && timeDiff < 135;
     const nextCombo = isFastTap ? combo + 1 : 1;
     const nextFeverProgress = clamp(
-      feverProgress + (isFastTap ? 14 : -6),
+      feverProgress + (isFastTap ? 9 : -12),
       0,
       100
     );
-    const feverForThisTap = isFever || nextFeverProgress >= 100;
+    const feverForThisTap = isFever || (nextFeverProgress >= 100 && nextCombo >= 6);
     const addedScore = feverForThisTap ? 2 : 1;
 
     if (navigator.vibrate) navigator.vibrate(12);
 
     setCombo(nextCombo);
     setFeverProgress(nextFeverProgress);
-    setIsFever(feverForThisTap || nextFeverProgress >= 30);
+    setIsFever(feverForThisTap || (nextFeverProgress >= 45 && nextCombo >= 4));
     setScore((prev) => prev + addedScore);
     setBurstSeed((prev) => prev + 1);
   };

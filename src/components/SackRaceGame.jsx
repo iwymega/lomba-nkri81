@@ -5,14 +5,14 @@ import CertificateStory from './CertificateStory';
 import { shareOrDownloadCertificate } from '../utils/exportToImage';
 import { submitScore } from '../utils/leaderboard';
 
-const TOTAL_TIME = 15;
+const TOTAL_TIME = 14;
 const FINISH_DISTANCE = 100;
 
 function getVerdict(distance) {
   if (distance >= 100) return 'Roket Karung Senja';
-  if (distance >= 82) return 'Sprinter RT Favorit';
-  if (distance >= 60) return 'Lompatan Mulai Rapi';
-  if (distance >= 40) return 'Langkah Masih Hati-hati';
+  if (distance >= 88) return 'Sprinter RT Favorit';
+  if (distance >= 66) return 'Lompatan Mulai Rapi';
+  if (distance >= 44) return 'Langkah Masih Hati-hati';
   return 'Belum Menemukan Ritme';
 }
 
@@ -88,14 +88,14 @@ export default function SackRaceGame({ playerName, region, onExit }) {
 
     if (side === expectedSide) {
       const nextStreak = streak + 1;
-      const gain = Math.min(12, 7 + Math.floor(nextStreak / 3));
+      const gain = Math.min(10, 5 + Math.floor(nextStreak / 4));
       setDistance((prev) => Math.min(FINISH_DISTANCE, prev + gain));
       setExpectedSide(side === 'left' ? 'right' : 'left');
       setStreak(nextStreak);
       setBestStreak((prev) => Math.max(prev, nextStreak));
       setFlash('clean');
     } else {
-      setDistance((prev) => Math.max(0, prev - 3));
+      setDistance((prev) => Math.max(0, prev - 8));
       setStreak(0);
       setFlash('slip');
     }

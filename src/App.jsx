@@ -10,24 +10,24 @@ const GAME_LIBRARY = {
     id: 'kerupuk',
     name: 'Makan Kerupuk',
     emoji: '🍘',
-    strap: 'Tap cepat, buru-buru habiskan kerupuk gantung dengan ritme stabil.',
-    highlight: 'Rasa paling sinematik dan cocok jadi hero game utama.',
+    strap: 'Tap cepat dengan ritme rapat, jaga fokus saat fever cepat turun.',
+    highlight: 'Tantangan utama: tempo makin ketat dan bonus tidak mudah aktif.',
     component: KerupukGame,
   },
   karung: {
     id: 'karung',
     name: 'Balap Karung',
     emoji: '🏃',
-    strap: 'Tap kiri-kanan bergantian untuk melompat tanpa kehilangan momentum.',
-    highlight: 'Nuansa lapangan sore dan race tempo tinggi.',
+    strap: 'Tap kiri-kanan bergantian dengan tempo pas, terlalu lambat atau salah langkah bikin oleng.',
+    highlight: 'Tantangan utama: momentum gampang hilang dan penalti lebih terasa.',
     component: SackRaceGame,
   },
   tarik: {
     id: 'tarik',
     name: 'Tarik Tambang',
     emoji: '🪢',
-    strap: 'Timing power meter, rebut momentum sebelum lawan menarik balik.',
-    highlight: 'Cocok untuk tensi dramatis dan efek crowd.',
+    strap: 'Timing power meter yang lebih cepat dan zona emas yang sempit.',
+    highlight: 'Tantangan utama: presisi tinggi, miss sedikit langsung kena penalti.',
     component: TugOfWarGame,
   },
 };
@@ -37,7 +37,7 @@ export default function App() {
   const [region, setRegion] = useState('');
   const [selectedGameId, setSelectedGameId] = useState('kerupuk');
   const [activeGameId, setActiveGameId] = useState(null);
-  const [leaderboardRows, setLeaderboardRows] = useState([]);
+  const [leaderboardByGame, setLeaderboardByGame] = useState({});
   const [leaderboardStatus, setLeaderboardStatus] = useState(
     isLeaderboardConfigured() ? 'idle' : 'missing-config'
   );
@@ -50,22 +50,27 @@ export default function App() {
     let ignore = false;
     setLeaderboardStatus('loading');
 
-    fetchLeaderboard(selectedGameId, 5)
-      .then((rows) => {
+    Promise.all(
+      Object.keys(GAME_LIBRARY).map(async (gameKey) => {
+        const rows = await fetchLeaderboard(gameKey, 10);
+        return [gameKey, rows];
+      })
+    )
+      .then((entries) => {
         if (ignore) return;
-        setLeaderboardRows(rows);
+        setLeaderboardByGame(Object.fromEntries(entries));
         setLeaderboardStatus('ready');
       })
       .catch(() => {
         if (ignore) return;
-        setLeaderboardRows([]);
+        setLeaderboardByGame({});
         setLeaderboardStatus('error');
       });
 
     return () => {
       ignore = true;
     };
-  }, [selectedGameId, activeGameId]);
+  }, [activeGameId]);
 
   const handleStart = (event) => {
     event.preventDefault();
@@ -278,7 +283,7 @@ export default function App() {
               <div>
                 <p className="festival-eyebrow">Leaderboard Global</p>
                 <p className="mt-1 text-sm font-semibold text-white">
-                  Top pemain {selectedGame.name}
+                  Top 10 tiap lomba, swipe untuk lihat semua
                 </p>
               </div>
               <Trophy className="h-5 w-5 text-yellow-300" />
@@ -303,42 +308,86 @@ export default function App() {
               </p>
             )}
 
-            {leaderboardStatus === 'ready' && leaderboardRows.length === 0 && (
+            {leaderboardStatus === 'ready' &&
+              Object.values(leaderboardByGame).every((rows) => !rows?.length) && (
               <p className="text-[13px] leading-5 text-white/68">
-                Belum ada skor global untuk arena ini. Kamu bisa jadi yang pertama.
+                Belum ada skor global. Kamu bisa jadi pemenang pertama di salah satu arena.
               </p>
             )}
 
-            {leaderboardStatus === 'ready' && leaderboardRows.length > 0 && (
-              <div className="space-y-2">
-                {leaderboardRows.map((row, index) => (
-                  <div
-                    key={row.id}
-                    className="flex items-center justify-between gap-3 rounded-[18px] border border-white/8 bg-white/4 px-3 py-2.5"
-                  >
-                    <div className="flex min-w-0 items-center gap-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-300 text-sm font-black text-red-950">
-                        {index + 1}
+            {leaderboardStatus === 'ready' && (
+              <div className="-mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-1">
+                {Object.values(GAME_LIBRARY).map((game) => {
+                  const rows = leaderboardByGame[game.id] || [];
+                  const winner = rows[0];
+
+                  return (
+                    <div
+                      key={game.id}
+                      className="min-w-[290px] snap-start rounded-[18px] border border-white/8 bg-white/4 px-3 py-2.5"
+                    >
+                      <div className="mb-2 flex items-center justify-between gap-3">
+                        <div className="flex min-w-0 items-center gap-2">
+                          <div className="festival-game-emoji !h-9 !w-9 !text-lg">
+                            {game.emoji}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-game text-base font-bold text-white">
+                              {game.name}
+                            </p>
+                            <p className="text-[10px] uppercase tracking-[0.18em] text-yellow-300/72">
+                              Top 10 global
+                            </p>
+                          </div>
+                        </div>
+                        {winner && (
+                          <p className="font-game text-lg font-black text-yellow-300">
+                            {winner.score}
+                          </p>
+                        )}
                       </div>
-                      <div className="min-w-0">
-                        <p className="truncate font-game text-base font-bold text-white">
-                          {row.player_name}
+
+                      {!winner && (
+                        <p className="text-[12px] text-white/60">
+                          Belum ada pemenang untuk lomba ini.
                         </p>
-                        <p className="truncate text-[11px] text-white/56">
-                          {row.region || 'Komunitas Merdeka'}
-                        </p>
-                      </div>
+                      )}
+
+                      {winner && (
+                        <div className="space-y-1.5">
+                          {rows.map((row, index) => (
+                            <div
+                              key={row.id}
+                              className="flex items-center justify-between gap-3 border-t border-white/6 py-1.5 first:border-t-0 first:pt-0"
+                            >
+                              <div className="flex min-w-0 items-center gap-2.5">
+                                <div className="flex h-6 w-6 shrink-0 items-center justify-center border border-yellow-300/40 bg-yellow-300/12 text-[11px] font-black text-yellow-300">
+                                  {index + 1}
+                                </div>
+                                <div className="min-w-0">
+                                  <p className="truncate font-game text-[15px] font-bold text-white">
+                                    {row.player_name}
+                                  </p>
+                                  <p className="truncate text-[10px] text-white/56">
+                                    {row.region || 'Komunitas Merdeka'}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-game text-[16px] font-black text-yellow-300">
+                                  {row.score}
+                                </p>
+                                <p className="max-w-[92px] truncate text-[10px] text-white/56">
+                                  {row.detail_value || row.verdict || 'Skor resmi'}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <div className="text-right">
-                      <p className="font-game text-lg font-black text-yellow-300">
-                        {row.score}
-                      </p>
-                      <p className="max-w-[96px] truncate text-[11px] text-white/56">
-                        {row.detail_value || row.verdict || 'Skor resmi'}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </section>
