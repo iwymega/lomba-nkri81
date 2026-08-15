@@ -3,7 +3,7 @@ create table if not exists public.leaderboard_entries (
   game_key text not null check (game_key in ('lari', 'kerupuk', 'karung', 'tarik', 'estafet')),
   player_name text not null check (char_length(player_name) between 2 and 32),
   region text,
-  score integer not null check (score between -100 and 20000),
+  score integer not null check (score between -100 and 1000000),
   detail_label text,
   detail_value text,
   verdict text,
@@ -26,7 +26,7 @@ on public.leaderboard_entries
 for insert
 to anon, authenticated
 with check (
-  score between -100 and 20000
+  score between -100 and 1000000
   and char_length(player_name) between 2 and 32
 );
 
@@ -42,4 +42,4 @@ alter table public.leaderboard_entries
 
 alter table public.leaderboard_entries
   add constraint leaderboard_entries_score_check
-  check (score between -100 and 20000);
+  check (score between -100 and 1000000);
