@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lomba Makan Kerupuk Tapper Merdeka - HUT RI Ke-81</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- HTML2Canvas for 9:16 Certificate Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;800&family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        game: ['Fredoka', 'sans-serif'],
+                        sans: ['Poppins', 'sans-serif']
+                    },
+                    colors: {
+                        riRed: '#DC2626',
+                        riDarkRed: '#7F1D1D',
+                        riGold: '#FACC15',
+                        riDarkGold: '#CA8A04'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-12px) rotate(3deg)' }
+                        },
+                        pop: {
+                            '0%': { transform: 'scale(0.8)', opacity: '0' },
+                            '70%': { transform: 'scale(1.1)' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { filter: 'drop-shadow(0 0 15px rgba(250, 204, 21, 0.8))' },
+                            '50%': { filter: 'drop-shadow(0 0 35px rgba(239, 68, 68, 1))' }
+                        },
+                        feverBg: {
+                            '0%': { backgroundPosition: '0% 0%' },
+                            '100%': { backgroundPosition: '100% 100%' }
+                        },
+                        floatText: {
+                            '0%': { opacity: '1', transform: 'translate(-50%, 0) scale(0.8) rotate(-5deg)' },
+                            '50%': { transform: 'translate(-50%, -40px) scale(1.3) rotate(5deg)' },
+                            '100%': { opacity: '0', transform: 'translate(-50%, -80px) scale(1) rotate(0deg)' }
+                        }
+                    },
+                    animation: {
+                        float: 'float 3.5s ease-in-out infinite',
+                        pop: 'pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+                        pulseGlow: 'pulseGlow 1.5s infinite',
+                        floatText: 'floatText 0.7s cubic-bezier(0.1, 0.8, 0.3, 1) forwards'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .game-touch-prevent {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .flag-garland {
+            background-image: repeating-linear-gradient(
+                -45deg,
+                #DC2626,
+                #DC2626 18px,
+                #FFFFFF 18px,
+                #FFFFFF 36px
+            );
+        }
+
+        /* Fever mode animated background lines */
+        .fever-mode-active {
+            background: linear-gradient(135deg, #7f1d1d, #dc2626, #b45309, #7f1d1d) !important;
+            background-size: 300% 300% !important;
+            animation: feverBg 1s ease infinite !important;
+        }
+
+        /* Floating +1 / Combo Text Popups */
+        .floating-hit {
+            position: absolute;
+            pointer-events: none;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 900;
+            text-shadow: 2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000;
+            z-index: 40;
+            white-space: nowrap;
+        }
+
+        /* Crumb particle styling */
+        .crumb {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            animation: crumbFall 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            z-index: 30;
+        }
+
+        @keyframes crumbFall {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.1);
+            }
+        }
+
+        /* Animated background balloons */
+        .balloon {
+            position: absolute;
+            bottom: -50px;
+            width: 30px;
+            height: 40px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            pointer-events: none;
+            opacity: 0.35;
+            animation: balloonRise 12s linear infinite;
+        }
+
+        @keyframes balloonRise {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
+            100% { transform: translateY(-110vh) rotate(20deg); opacity: 0; }
+        }
+
+        /* Screen Shake Effect */
+        .shake-screen {
+            animation: screenShake 0.12s ease-in-out infinite;
+        }
+
+        @keyframes screenShake {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-3px, 2px); }
+            50% { transform: translate(3px, -2px); }
+            75% { transform: translate(-2px, -3px); }
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+        ::-webkit-scrollbar-thumb { background: #FACC15; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-full flex flex-col justify-center items-center overflow-x-hidden selection:bg-red-500 selection:text-white game-touch-prevent">
+
+    <div id="app" class="w-full max-w-md min-h-screen bg-gradient-to-b from-red-700 via-red-800 to-red-950 flex flex-col justify-between relative overflow-hidden shadow-2xl border-x border-red-600/30">
+        
+        <!-- Animated Background Balloons -->
+        <div class="balloon bg-red-500 left-[10%]" style="animation-delay: 0s;"></div>
+        <div class="balloon bg-white left-[30%]" style="animation-delay: 3s;"></div>
+        <div class="balloon bg-red-600 left-[60%]" style="animation-delay: 6s;"></div>
+        <div class="balloon bg-yellow-400 left-[85%]" style="animation-delay: 1.5s;"></div>
+
+        <!-- Merah Putih Garland Decoration Top -->
+        <div class="absolute top-0 left-0 right-0 h-3.5 flag-garland z-30 shadow-md"></div>
+        <div class="absolute top-3.5 left-0 right-0 flex justify-around px-2 z-20 pointer-events-none opacity-90">
+            <div class="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[24px] border-t-white filter drop-shadow"></div>
+            <div class="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[24px] border-t-red-600 filter drop-shadow"></div>
+            <div class="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[24px] border-t-white filter drop-shadow"></div>
+            <div class="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[24px] border-t-red-600 filter drop-shadow"></div>
+            <div class="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[24px] border-t-white filter drop-shadow"></div>
+            <div class="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[24px] border-t-red-600 filter drop-shadow"></div>
+        </div>
+
+        <!-- Header Controls -->
+        <header class="p-4 pt-7 flex justify-between items-center z-20">
+            <div class="flex items-center gap-2">
+                <span class="bg-yellow-400 text-red-950 font-black text-[10px] tracking-widest px-3 py-1 rounded-full uppercase shadow-lg flex items-center gap-1 font-game border border-yellow-200">
+                    <i data-lucide="flag" class="w-3.5 h-3.5 fill-red-600 stroke-none"></i> HUT RI Ke-81
+                </span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button id="btn-music" class="p-2.5 bg-red-900/90 hover:bg-red-800 text-yellow-300 rounded-2xl border border-red-500/50 transition active:scale-90 shadow-md flex items-center gap-1 text-xs font-bold font-game" title="Musik Kemerdekaan">
+                    <i id="icon-music" data-lucide="music" class="w-4 h-4"></i> <span id="label-music" class="hidden sm:inline">BGM</span>
+                </button>
+                <button id="btn-sound" class="p-2.5 bg-red-900/90 hover:bg-red-800 text-yellow-300 rounded-2xl border border-red-500/50 transition active:scale-90 shadow-md" title="Efek Suara">
+                    <i id="icon-sound" data-lucide="volume-2" class="w-4 h-4"></i>
+                </button>
+                <button id="btn-leaderboard" class="p-2.5 bg-red-900/90 hover:bg-red-800 text-yellow-300 rounded-2xl border border-red-500/50 transition active:scale-90 shadow-md" title="Papan Skor">
+                    <i data-lucide="trophy" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-1 flex flex-col justify-center items-center p-4 relative z-10">
+
+            <section id="view-idle" class="w-full flex flex-col items-center text-center animate-pop">
+                <!-- Title Banner -->
+                <div class="relative mb-5 w-full">
+                    <div class="absolute -inset-1 bg-yellow-400 rounded-3xl blur-md opacity-50 animate-pulse"></div>
+                    <div class="relative bg-gradient-to-br from-red-600 via-red-700 to-red-900 border-2 border-yellow-400 rounded-3xl p-5 shadow-2xl">
+                        <span class="text-[10px] font-bold uppercase tracking-widest bg-yellow-400 text-red-950 px-3 py-0.5 rounded-full inline-block mb-2 font-game">
+                            🇲🇨 LOMBA TRADISIONAL DIGITAL
+                        </span>
+                        <h1 class="text-3xl font-black font-game text-white tracking-wide drop-shadow-md leading-tight">
+                            MAKAN KERUPUK <span class="text-yellow-300 block text-4xl mt-0.5 animate-bounce">SUPER TAPPER 🍘</span>
+                        </h1>
+                        <p class="text-xs text-red-100 font-medium mt-2">
+                            Ayo makan kerupuk goyang secepatnya dalam 15 detik!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Input Form & Kerupuk Selector -->
+                <div class="w-full bg-slate-900/90 backdrop-blur-md p-5 rounded-3xl border border-red-500/30 shadow-2xl mb-4">
+                    <div class="mb-3.5 text-left">
+                        <label class="text-[11px] font-bold text-yellow-400 uppercase tracking-wider block mb-1">Nama Pejuang 17-an (Wajib)</label>
+                        <div class="relative">
+                            <input type="text" id="input-name" maxlength="15" placeholder="Contoh: Agus Merdeka" class="w-full bg-slate-800/90 text-white font-bold px-4 py-3 rounded-2xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition text-sm">
+                            <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute right-4 top-3.5"></i>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 text-left">
+                        <label class="text-[11px] font-bold text-slate-300 uppercase tracking-wider block mb-1">RT / RW / Daerah (Opsional)</label>
+                        <div class="relative">
+                            <input type="text" id="input-region" maxlength="20" placeholder="Contoh: RT 05 / Jakarta" class="w-full bg-slate-800/90 text-white px-4 py-3 rounded-2xl border-2 border-slate-700 focus:border-yellow-400 focus:outline-none transition text-sm">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-slate-400 absolute right-4 top-3.5"></i>
+                        </div>
+                    </div>
+
+                    <!-- Flavor Choice -->
+                    <div class="mb-5 text-left">
+                        <label class="text-[11px] font-bold text-yellow-400 uppercase tracking-wider block mb-1.5">Pilih Varian Kerupuk Favorit</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button type="button" data-flavor="putih" class="flavor-btn p-2 rounded-2xl border-2 border-yellow-400 bg-yellow-400/20 text-yellow-300 font-game text-xs font-bold flex flex-col items-center gap-1 transition active:scale-95">
+                                <span class="text-xl">⚪</span>
+                                <span>Putih Classic</span>
+                            </button>
+                            <button type="button" data-flavor="udang" class="flavor-btn p-2 rounded-2xl border-2 border-slate-700 bg-slate-800 text-slate-400 font-game text-xs font-bold flex flex-col items-center gap-1 transition active:scale-95">
+                                <span class="text-xl">🦐</span>
+                                <span>Udang Gold</span>
+                            </button>
+                            <button type="button" data-flavor="pedas" class="flavor-btn p-2 rounded-2xl border-2 border-slate-700 bg-slate-800 text-slate-400 font-game text-xs font-bold flex flex-col items-center gap-1 transition active:scale-95">
+                                <span class="text-xl">🌶️</span>
+                                <span>Pedas Cabai</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button id="btn-start" class="w-full bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:from-yellow-300 hover:to-yellow-400 text-red-950 font-black font-game text-xl py-4 rounded-2xl shadow-xl shadow-yellow-500/25 active:scale-98 transition transform flex items-center justify-center gap-2 border-2 border-yellow-200">
+                        <i data-lucide="play" class="w-6 h-6 fill-red-950"></i> MULAI LOMBA SEKARANG!
+                    </button>
+                </div>
+
+                <!-- Personal Best Badge -->
+                <div id="pb-badge" class="hidden bg-red-950/80 border border-yellow-500/40 px-4 py-2 rounded-2xl flex items-center gap-2 text-xs text-yellow-300 font-semibold shadow">
+                    <i data-lucide="award" class="w-4 h-4 text-yellow-400"></i> Rekor Pribadi: <span id="pb-score" class="font-bold text-white">0</span> Tap
+                </div>
+            </section>
+
+            <section id="view-countdown" class="hidden w-full flex flex-col items-center justify-center text-center py-12">
+                <div class="text-red-200 font-bold tracking-widest text-sm uppercase mb-3 animate-pulse">BERSIAP DI GARIS START...</div>
+                <div id="countdown-num" class="text-9xl font-black font-game text-yellow-400 drop-shadow-[0_10px_25px_rgba(0,0,0,0.8)] animate-bounce">
+                    3
+                </div>
+                <div class="mt-6 bg-slate-900/90 border border-yellow-400/50 p-4 rounded-2xl max-w-xs shadow-xl">
+                    <p class="text-xs text-yellow-300 font-bold flex items-center justify-center gap-1.5 mb-1">
+                        <i data-lucide="zap" class="w-4 h-4 text-yellow-400"></i> FEVER MODE & TANTANGAN
+                    </p>
+                    <p class="text-[11px] text-slate-300">
+                        Tap bertubi-tubi untuk <span class="text-yellow-400 font-bold">FEVER 2x</span>. <span class="text-red-400 font-bold">AWAS ANGIN GULUNG 🌬️ & LALAT 🪰</span> (-3 Poin)!
+                    </p>
+                </div>
+            </section>
+
+            <section id="view-playing" class="hidden w-full flex flex-col items-center justify-between h-full py-1 relative">
+                
+                <!-- Floating damage score target container -->
+                <div id="hit-popups-container" class="absolute inset-0 pointer-events-none z-40 overflow-hidden"></div>
+
+                <!-- Wind Warning Banner -->
+                <div id="wind-warning" class="absolute top-16 left-1/2 -translate-x-1/2 bg-cyan-600/90 text-white text-[11px] font-game font-bold px-3 py-1 rounded-full shadow-lg opacity-0 transition-opacity duration-300 z-30 pointer-events-none flex items-center gap-1">
+                    🌬️ ANGIN KENCANG BERTIUP! Kerupuk Goyang!
+                </div>
+
+                <!-- Score & Timer Display Top Bar -->
+                <div class="w-full flex justify-between items-center gap-2 mb-2">
+                    <!-- Timer -->
+                    <div class="flex-1 bg-slate-900/90 backdrop-blur p-2.5 rounded-2xl border border-red-500/40 shadow-lg text-center">
+                        <span class="text-[9px] font-bold text-red-300 uppercase tracking-widest block">Sisa Waktu</span>
+                        <div id="timer-val" class="text-3xl font-black font-game text-yellow-400">15s</div>
+                    </div>
+
+                    <!-- Fever / Hype Bar Center -->
+                    <div class="flex-[1.2] bg-slate-900/90 backdrop-blur p-2 rounded-2xl border border-red-500/40 shadow-lg flex flex-col items-center justify-center">
+                        <span class="text-[9px] font-bold text-yellow-300 uppercase tracking-widest block mb-1">Sorakan Warga 📣</span>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                            <div id="fever-bar-fill" class="h-full bg-gradient-to-r from-yellow-400 to-red-500 rounded-full transition-all duration-100 w-0"></div>
+                        </div>
+                    </div>
+
+                    <!-- Score -->
+                    <div class="flex-1 bg-slate-900/90 backdrop-blur p-2.5 rounded-2xl border border-red-500/40 shadow-lg text-center">
+                        <span class="text-[9px] font-bold text-red-300 uppercase tracking-widest block">Total Tap</span>
+                        <div id="score-val" class="text-3xl font-black font-game text-white">0</div>
+                    </div>
+                </div>
+
+                <!-- Combo Indicator Banner -->
+                <div class="h-8 flex items-center justify-center z-20">
+                    <div id="combo-banner" class="opacity-0 transition-all duration-150 bg-gradient-to-r from-yellow-400 via-amber-400 to-red-500 text-red-950 font-black font-game text-xs px-4 py-1.5 rounded-full shadow-xl flex items-center gap-1.5 transform scale-90 border border-yellow-200">
+                        <i data-lucide="flame" class="w-4 h-4 fill-red-950"></i> <span id="combo-text">FEVER MERDEKA 2x!</span>
+                    </div>
+                </div>
+
+                <!-- Interactive Cracker Playground -->
+                <div id="game-playground" class="relative my-auto w-full flex flex-col items-center justify-center min-h-[300px] select-none">
+                    
+                    <!-- Hanging String/Tali Rafia Merah Putih -->
+                    <div id="tali-rafia" class="w-1.5 bg-slate-900 h-28 absolute top-0 left-1/2 -translate-x-1/2 shadow-lg z-0 transition-transform duration-100"></div>
+                    <div id="tali-knot" class="w-4 h-4 bg-red-600 border border-yellow-300 rounded-full absolute top-24 left-1/2 -translate-x-1/2 z-0 shadow transition-transform duration-100"></div>
+
+                    <!-- Fly Obstacle Container -->
+                    <div id="fly-obstacle" class="absolute z-30 hidden cursor-pointer transition-all duration-300 animate-pulse hover:scale-110 active:scale-90" title="Awas Lalat!">
+                        <span class="text-2xl filter drop-shadow">🪰</span>
+                    </div>
+
+                    <!-- Cracker Swaying Pendulum Wrapper -->
+                    <div id="cracker-container" class="relative z-10 cursor-pointer mt-20 transition-transform duration-75">
+                        <!-- Dynamic Canvas Rendered Kerupuk -->
+                        <canvas id="cracker-canvas" width="240" height="240" class="filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.6)]"></canvas>
+                        
+                        <!-- Tap Instruction Floating Badge -->
+                        <span id="tap-instruction" class="absolute bottom-[-12px] left-1/2 -translate-x-1/2 bg-yellow-400 text-red-950 font-black text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow-xl border-2 border-yellow-200 whitespace-nowrap pointer-events-none animate-bounce">
+                            TAP GIGIT SECEPATNYA! 🍘
+                        </span>
+                    </div>
+                </div>
+
+                <!-- TPS Speedometer Footer -->
+                <div class="w-full bg-slate-950/80 backdrop-blur px-4 py-2 rounded-2xl border border-red-900/60 flex justify-between items-center text-xs">
+                    <span class="text-slate-400 font-medium flex items-center gap-1">
+                        <i data-lucide="gauge" class="w-3.5 h-3.5 text-yellow-400"></i> Kecepatan Gigitan:
+                    </span>
+                    <span id="tps-val" class="font-bold text-yellow-400 font-game text-sm">0.0 TPS</span>
+                </div>
+            </section>
+
+            <section id="view-finished" class="hidden w-full flex flex-col items-center text-center animate-pop py-1">
+                <div class="mb-2">
+                    <span class="bg-green-500/20 text-green-300 font-bold text-xs px-3.5 py-1 rounded-full border border-green-500/40 inline-flex items-center gap-1 font-game">
+                        <i data-lucide="check-circle-2" class="w-4 h-4 text-green-400"></i> LOMBA SELESAI!
+                    </span>
+                </div>
+
+                <!-- Certificate Preview Container (Styled in 9:16 Aspect Ratio) -->
+                <div class="w-full flex justify-center mb-3">
+                    <div id="certificate-wrapper" class="relative shadow-2xl rounded-2xl overflow-hidden border-2 border-yellow-400 max-w-[270px] sm:max-w-[310px]">
+                        
+                        <!-- Target Node Rendered for HTML2Canvas (9:16 Aspect Ratio) -->
+                        <div id="certificate-story" class="w-[360px] h-[640px] bg-gradient-to-b from-red-600 via-red-700 to-red-950 p-6 flex flex-col justify-between items-center text-white relative overflow-hidden text-center" style="aspect-ratio: 9/16; transform-origin: top left;">
+                            
+                            <!-- Header Merah Putih Ribbon -->
+                            <div class="absolute top-0 left-0 w-full h-3 bg-white"></div>
+                            <div class="absolute top-3 left-0 w-full h-3 bg-red-600"></div>
+
+                            <!-- Decorative Watermark Background -->
+                            <div class="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
+                                <span class="text-[200px] font-black font-game">81</span>
+                            </div>
+
+                            <!-- Top Branding -->
+                            <div class="text-center z-10 mt-6">
+                                <span class="bg-yellow-400 text-red-950 font-black text-[11px] px-3.5 py-1 rounded-full uppercase tracking-widest shadow-md inline-block font-game">
+                                    PERINGATAN HUT RI KE-81 🇲🇨
+                                </span>
+                                <h1 class="text-2xl font-game font-bold mt-2.5 tracking-wide text-white drop-shadow-md">
+                                    SERTIFIKAT KEMERDEKAAN
+                                </h1>
+                                <p class="text-[10px] text-red-100 font-medium">Lomba Makan Kerupuk Digital • 17 Agustus 2026</p>
+                            </div>
+
+                            <!-- Certificate Body White Card -->
+                            <div class="w-full bg-white text-slate-900 rounded-2xl p-5 shadow-2xl z-10 border-4 border-yellow-400 relative">
+                                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">
+                                    Diberikan Kepada Pejuang Lomba:
+                                </p>
+                                <h2 id="cert-name" class="text-2xl font-black text-red-600 my-1 font-game truncate px-2">
+                                    Nama Pengguna
+                                </h2>
+                                <p id="cert-region" class="text-xs text-slate-500 font-medium -mt-1 mb-2">
+                                    📍 Warga Merdeka
+                                </p>
+
+                                <div class="my-3 py-3 bg-red-50 rounded-xl border border-red-100 shadow-inner">
+                                    <p class="text-[10px] text-red-500 font-bold uppercase tracking-wider">
+                                        Hasil Perolehan Lomba
+                                    </p>
+                                    <p class="text-4xl font-game font-black text-red-600 my-0.5">
+                                        <span id="cert-score">0</span> <span class="text-xs font-sans font-bold text-slate-600">Gigitan</span>
+                                    </p>
+                                    <p id="cert-tps" class="text-[10px] text-slate-500 font-medium">Rata-rata 0.0 Tap / Detik</p>
+                                </div>
+
+                                <p class="text-[10px] text-gray-400 font-bold uppercase">Gelar Kehormatan Warga:</p>
+                                <div id="cert-title" class="mt-1 bg-yellow-400 text-red-950 font-game font-bold text-sm py-2 px-3 rounded-xl shadow border border-yellow-300">
+                                    Pahlawan Makan Kerupuk 🎖️
+                                </div>
+                            </div>
+
+                            <!-- Footer Stamp & CTA -->
+                            <div class="text-center z-10 mb-3 w-full">
+                                <p class="text-xs font-bold text-yellow-300 drop-shadow">
+                                    Bisa ngalahin rekor gue di Lomba 17-an?
+                                </p>
+                                <p class="text-[10px] text-red-100 font-mono mt-0.5 opacity-90">
+                                    Mainkan di: <span class="underline font-bold">lomba-81.vercel.app</span>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="w-full flex flex-col gap-2 px-2">
+                    <button id="btn-share" class="w-full bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:from-yellow-300 hover:to-amber-400 text-red-950 font-black font-game text-base py-3.5 rounded-2xl shadow-xl shadow-yellow-500/20 active:scale-98 transition flex items-center justify-center gap-2 border-2 border-yellow-200">
+                        <i data-lucide="share-2" class="w-5 h-5"></i> BAGIKAN KE IG STORY / WA
+                    </button>
+
+                    <div class="flex gap-2">
+                        <button id="btn-replay" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold text-sm py-3 rounded-2xl border border-red-500/40 transition active:scale-95 flex items-center justify-center gap-1.5 font-game">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Main Lagi
+                        </button>
+                        <button id="btn-home" class="flex-1 bg-slate-900 hover:bg-slate-800 text-slate-200 font-bold text-sm py-3 rounded-2xl border border-slate-700 transition active:scale-95 flex items-center justify-center gap-1.5 font-game">
+                            <i data-lucide="home" class="w-4 h-4"></i> Ganti Nama
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="p-2.5 text-center text-[10px] text-red-200/70 z-10">
+            Digital Lomba 17 Agustus • Semarak HUT RI Ke-81 🇮🇩
+        </footer>
+    </div>
+
+    <!-- MODAL: LEADERBOARD -->
+    <div id="modal-leaderboard" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-red-500/30 rounded-3xl w-full max-w-sm p-5 shadow-2xl text-slate-100 animate-pop">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-game font-bold text-lg text-yellow-400 flex items-center gap-2">
+                    <i data-lucide="trophy" class="w-5 h-5 text-yellow-400"></i> Papan Skor Lokal
+                </h3>
+                <button id="btn-close-lb" class="text-slate-400 hover:text-white p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div id="lb-list" class="space-y-2 mb-4 max-h-60 overflow-y-auto pr-1">
+                <!-- Leaderboard items injected via JS -->
+            </div>
+
+            <button id="btn-clear-lb" class="w-full text-xs text-red-400 hover:text-red-300 py-2.5 border border-red-900/50 rounded-xl transition font-medium">
+                Bersihkan Rekor Lokal
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL: SHARE FALLBACK -->
+    <div id="modal-share" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-yellow-500/40 rounded-3xl w-full max-w-sm p-5 shadow-2xl text-slate-100 text-center animate-pop">
+            <h3 class="font-game font-bold text-lg text-yellow-400 mb-2 flex items-center justify-center gap-2">
+                <i data-lucide="image" class="w-5 h-5"></i> Sertifikat Siap!
+            </h3>
+            <p class="text-xs text-slate-300 mb-4">
+                Gambar Sertifikat telah berhasil digenerate dalam format HD 9:16.
+            </p>
+
+            <div id="share-img-preview" class="mb-4 flex justify-center max-h-64 overflow-hidden rounded-xl border border-slate-700">
+                <!-- Image Tag injected here -->
+            </div>
+
+            <div class="space-y-2">
+                <a id="btn-download-img" download="Sertifikat-Makan-Kerupuk.png" class="w-full bg-yellow-400 hover:bg-yellow-300 text-red-950 font-bold py-3 rounded-2xl block text-sm transition font-game">
+                    ⬇️ Download Gambar (Simpan ke HP)
+                </a>
+                <button id="btn-close-share" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-2.5 rounded-2xl text-sm transition">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           SUPER SYNTH AUDIO ENGINE (Web Audio API) - BGM + SFX
+           ========================================================================== */
+        class AudioEngine {
+            constructor() {
+                this.ctx = null;
+                this.isMutedSFX = false;
+                this.isMutedBGM = false;
+                this.bgmTimer = null;
+                this.bgmStep = 0;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (AudioContext) {
+                        this.ctx = new AudioContext();
+                    }
+                }
+                if (this.ctx && this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+
+            // Synthesize Buzz / Error sound when tapping Lalat obstacle
+            playError() {
+                if (this.isMutedSFX) return;
+                this.init();
+                if (!this.ctx) return;
+
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.linearRampToValueAtTime(80, now + 0.2);
+
+                gain.gain.setValueAtTime(0.4, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.2);
+            }
+
+            // Synthesize realistic Crunch / Bite sound with pitch scaling based on combo
+            playCrunch(combo = 0) {
+                if (this.isMutedSFX) return;
+                this.init();
+                if (!this.ctx) return;
+
+                const now = this.ctx.currentTime;
+                
+                // Pitch scaling (higher combo = higher pitch)
+                const pitchOffset = Math.min(combo * 40, 600);
+
+                // Noise buffer generation for crunchy sound
+                const bufferSize = this.ctx.sampleRate * 0.07; // 70ms
+                const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+
+                const noise = this.ctx.createBufferSource();
+                noise.buffer = buffer;
+
+                // Bandpass filter for realistic crunchy bite
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.setValueAtTime(2000 + pitchOffset, now);
+                filter.Q.setValueAtTime(3, now);
+
+                // Gain Envelope
+                const gain = this.ctx.createGain();
+                gain.gain.setValueAtTime(0.7, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.07);
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                noise.start(now);
+
+                // Additional subtle pop synth
+                const osc = this.ctx.createOscillator();
+                const oscGain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(150 + pitchOffset / 2, now);
+                osc.frequency.exponentialRampToValueAtTime(40, now + 0.05);
+
+                oscGain.gain.setValueAtTime(0.4, now);
+                oscGain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+
+                osc.connect(oscGain);
+                oscGain.connect(this.ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.05);
+            }
+
+            // Synthesize Referee Whistle Sound
+            playWhistle() {
+                if (this.isMutedSFX) return;
+                this.init();
+                if (!this.ctx) return;
+
+                const now = this.ctx.currentTime;
+                const osc1 = this.ctx.createOscillator();
+                const osc2 = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc1.type = 'sine';
+                osc2.type = 'sine';
+
+                osc1.frequency.setValueAtTime(2400, now);
+                osc2.frequency.setValueAtTime(2800, now);
+
+                // Modulate frequency for whistle trill
+                osc1.frequency.setValueAtTime(2400, now + 0.05);
+                osc1.frequency.linearRampToValueAtTime(2600, now + 0.15);
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+
+                osc1.connect(gain);
+                osc2.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc1.start(now);
+                osc2.start(now);
+                osc1.stop(now + 0.35);
+                osc2.stop(now + 0.35);
+            }
+
+            // Synthesize Countdown Beep
+            playBeep(isHigh = false) {
+                if (this.isMutedSFX) return;
+                this.init();
+                if (!this.ctx) return;
+
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(isHigh ? 880 : 440, now);
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.2);
+            }
+
+            // Synthesize Audience Cheer / Crowd Sound
+            playCrowdCheer() {
+                if (this.isMutedSFX) return;
+                this.init();
+                if (!this.ctx) return;
+
+                const now = this.ctx.currentTime;
+                const bufferSize = this.ctx.sampleRate * 0.8; // 800ms crowd burst
+                const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+
+                const crowd = this.ctx.createBufferSource();
+                crowd.buffer = buffer;
+
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(1200, now);
+
+                const gain = this.ctx.createGain();
+                gain.gain.setValueAtTime(0.01, now);
+                gain.gain.linearRampToValueAtTime(0.2, now + 0.2);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+
+                crowd.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                crowd.start(now);
+            }
+
+            // Synthesize Fanfare Melody on Finish
+            playFanfare() {
+                if (this.isMutedSFX) return;
+                this.init();
+                if (!this.ctx) return;
+
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                notes.forEach((freq, index) => {
+                    const now = this.ctx.currentTime + index * 0.12;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now);
+
+                    gain.gain.setValueAtTime(0.35, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                });
+            }
+
+            // Synthesize 17-an Chiptune Upbeat Background Music (BGM)
+            startBGM() {
+                if (this.bgmTimer) return;
+                this.init();
+
+                // Upbeat Kemerdekaan March Chiptune Melody (Frequencies)
+                const melody = [
+                    392, 392, 523.25, 523.25, 659.25, 587.33, 523.25,
+                    392, 392, 523.25, 523.25, 659.25, 587.33, 523.25,
+                    659.25, 659.25, 698.46, 783.99, 698.46, 659.25, 587.33,
+                    523.25, 587.33, 659.25, 523.25
+                ];
+
+                this.bgmStep = 0;
+
+                this.bgmTimer = setInterval(() => {
+                    if (this.isMutedBGM || !this.ctx) return;
+
+                    const freq = melody[this.bgmStep % melody.length];
+                    const now = this.ctx.currentTime;
+
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(freq, now);
+
+                    gain.gain.setValueAtTime(0.04, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+
+                    osc.start(now);
+                    osc.stop(now + 0.18);
+
+                    this.bgmStep++;
+                }, 220); // ~136 BPM
+            }
+
+            stopBGM() {
+                if (this.bgmTimer) {
+                    clearInterval(this.bgmTimer);
+                    this.bgmTimer = null;
+                }
+            }
+        }
+
+        const sound = new AudioEngine();
+
+        /* ==========================================================================
+           PHYSICS & ANIMATED KERUPUK CANVAS ENGINE
+           ========================================================================== */
+        class KerupukCanvas {
+            constructor(canvasId) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.width = this.canvas.width;
+                this.height = this.canvas.height;
+                
+                // Physics pendulum attributes
+                this.angle = 0;
+                this.angularVelocity = 0;
+                this.eatenRatio = 0;
+                this.flavor = 'putih'; // putih, udang, pedas
+                this.windForce = 0;
+                this.verticalBob = 0;
+
+                this.startPhysicsLoop();
+            }
+
+            setFlavor(flavor) {
+                this.flavor = flavor;
+                this.draw();
+            }
+
+            // Apply wind gust force
+            applyWind(force) {
+                this.windForce = force;
+            }
+
+            // Impulse force applied on tap (sway kerupuk wider)
+            applyTapForce() {
+                const force = (Math.random() - 0.5) * 0.35; // Increased sway force
+                this.angularVelocity += force;
+            }
+
+            startPhysicsLoop() {
+                let time = 0;
+                const animate = () => {
+                    time += 0.05;
+
+                    // Pendulum Physics updates with wind & vertical bobbing
+                    const gravity = 0.0035; // Slightly stiffer gravity
+                    const damping = 0.955;  // Slightly looser damping for more movement
+
+                    const angularAcceleration = -gravity * Math.sin(this.angle) + this.windForce;
+                    this.angularVelocity += angularAcceleration;
+                    this.angularVelocity *= damping;
+                    this.angle += this.angularVelocity;
+
+                    // Fade out wind gust over time
+                    this.windForce *= 0.92;
+
+                    // Vertical bobbing physics (simulating rope stretch)
+                    this.verticalBob = Math.sin(time * 3) * 6 + Math.cos(this.angle * 2) * 10;
+
+                    this.draw();
+                    requestAnimationFrame(animate);
+                };
+                requestAnimationFrame(animate);
+            }
+
+            // Draw procedural Kerupuk with bites & chosen flavor palette
+            draw() {
+                const ctx = this.ctx;
+                const centerX = this.width / 2;
+                const centerY = this.height / 2 - 10 + this.verticalBob;
+                const radius = 85;
+
+                ctx.clearRect(0, 0, this.width, this.height);
+
+                ctx.save();
+
+                // Translate to top string center for natural pendulum rotation
+                ctx.translate(centerX, centerY - radius + 25);
+                ctx.rotate(this.angle);
+                ctx.translate(-centerX, -(centerY - radius + 25));
+
+                // Color themes
+                let baseColor = '#FFF8DC'; // Cornsilk (Classic Putih)
+                let strokeColor = '#E6D7B8';
+                let patternColor = 'rgba(210, 180, 140, 0.5)';
+
+                if (this.flavor === 'udang') {
+                    baseColor = '#FDE68A'; // Golden Udang
+                    strokeColor = '#F59E0B';
+                    patternColor = 'rgba(217, 119, 6, 0.5)';
+                } else if (this.flavor === 'pedas') {
+                    baseColor = '#FCA5A5'; // Chili Red
+                    strokeColor = '#EF4444';
+                    patternColor = 'rgba(185, 28, 28, 0.5)';
+                }
+
+                // Base Shadow
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
+                ctx.shadowBlur = 18;
+                ctx.shadowOffsetY = 10;
+
+                // Draw Cracker Body (Procedural wavy edge)
+                ctx.beginPath();
+                const totalPoints = 36;
+                for (let i = 0; i <= totalPoints; i++) {
+                    const angle = (i / totalPoints) * Math.PI * 2;
+                    const wave = Math.sin(angle * 8) * 5 + Math.cos(angle * 12) * 3;
+                    const r = radius + wave;
+                    const x = centerX + Math.cos(angle) * r;
+                    const y = centerY + Math.sin(angle) * r;
+
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+
+                // Bite Cutout Mask
+                if (this.eatenRatio > 0) {
+                    ctx.fillStyle = baseColor;
+                    ctx.fill();
+
+                    ctx.globalCompositeOperation = 'destination-out';
+                    ctx.beginPath();
+                    const biteY = centerY + radius - (radius * 2.1 * Math.min(0.92, this.eatenRatio));
+                    
+                    ctx.moveTo(centerX - radius - 25, centerY + radius + 25);
+                    ctx.lineTo(centerX - radius - 25, biteY);
+                    
+                    for (let x = centerX - radius - 25; x <= centerX + radius + 25; x += 12) {
+                        const biteJag = Math.sin(x * 0.15) * 9 + Math.cos(x * 0.3) * 4;
+                        ctx.lineTo(x, biteY + biteJag);
+                    }
+                    ctx.lineTo(centerX + radius + 25, centerY + radius + 25);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    ctx.globalCompositeOperation = 'source-over';
+                } else {
+                    ctx.fillStyle = baseColor;
+                    ctx.fill();
+                }
+
+                // Texture Swirls
+                ctx.strokeStyle = strokeColor;
+                ctx.lineWidth = 3.5;
+                ctx.stroke();
+
+                ctx.strokeStyle = patternColor;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for (let r = 15; r < radius - 8; r += 16) {
+                    ctx.arc(centerX, centerY, r, 0, Math.PI * 2);
+                }
+                ctx.stroke();
+
+                // Chili flakes if pedas
+                if (this.flavor === 'pedas') {
+                    ctx.fillStyle = '#991B1B';
+                    for (let p = 0; p < 8; p++) {
+                        const px = centerX + (Math.sin(p * 3) * 40);
+                        const py = centerY + (Math.cos(p * 5) * 40);
+                        ctx.fillRect(px, py, 4, 4);
+                    }
+                }
+
+                // Center Hole for Tali Rafia
+                ctx.fillStyle = '#991B1B';
+                ctx.beginPath();
+                ctx.arc(centerX, centerY - radius + 25, 6, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        /* ==========================================================================
+           STATE MANAGEMENT & GAMEPLAY CONTROLLER
+           ========================================================================== */
+        const APP_STATE = {
+            view: 'IDLE',
+            playerName: '',
+            region: '',
+            score: 0,
+            combo: 0,
+            timeLeft: 15,
+            lastTapTime: 0,
+            timerInterval: null,
+            flyInterval: null,
+            windInterval: null,
+            tps: 0,
+            highScore: 0,
+            flavor: 'putih',
+            isFever: false,
+            feverProgress: 0
+        };
+
+        let kerupukEngine = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            kerupukEngine = new KerupukCanvas('cracker-canvas');
+
+            loadHighScore();
+            setupEventListeners();
+        });
+
+        function loadHighScore() {
+            const saved = localStorage.getItem('lomba_kerupuk_pb');
+            if (saved) {
+                APP_STATE.highScore = parseInt(saved, 10);
+                document.getElementById('pb-score').innerText = APP_STATE.highScore;
+                document.getElementById('pb-badge').classList.remove('hidden');
+            }
+        }
+
+        function calculateTitle(score) {
+            if (score > 260) return { title: 'Tersangka Auto-Clicker 🤖', badge: 'BOT' };
+            if (score >= 160) return { title: 'Pahlawan Nasional Kerupuk 🎖️', badge: 'LEGEND' };
+            if (score >= 120) return { title: 'Suhu Makan Kerupuk ⚡', badge: 'MASTER' };
+            if (score >= 75) return { title: 'Juara Lomba Kemerdekaan 🏆', badge: 'CHAMPION' };
+            if (score >= 35) return { title: 'Warga RT Teladan 🇮🇩', badge: 'PATRIOT' };
+            return { title: 'Warga Kerupuk Melempem 🥣', badge: 'PEMULA' };
+        }
+
+        function setView(viewName) {
+            APP_STATE.view = viewName;
+
+            document.getElementById('view-idle').classList.add('hidden');
+            document.getElementById('view-countdown').classList.add('hidden');
+            document.getElementById('view-playing').classList.add('hidden');
+            document.getElementById('view-finished').classList.add('hidden');
+
+            if (viewName === 'IDLE') document.getElementById('view-idle').classList.remove('hidden');
+            if (viewName === 'COUNTDOWN') document.getElementById('view-countdown').classList.remove('hidden');
+            if (viewName === 'PLAYING') document.getElementById('view-playing').classList.remove('hidden');
+            if (viewName === 'FINISHED') document.getElementById('view-finished').classList.remove('hidden');
+        }
+
+        function setupEventListeners() {
+            // Flavor selection
+            document.querySelectorAll('.flavor-btn').forEach((btn) => {
+                btn.addEventListener('click', (e) => {
+                    const flavor = btn.getAttribute('data-flavor');
+                    APP_STATE.flavor = flavor;
+
+                    document.querySelectorAll('.flavor-btn').forEach(b => {
+                        b.classList.remove('border-yellow-400', 'bg-yellow-400/20', 'text-yellow-300');
+                        b.classList.add('border-slate-700', 'bg-slate-800', 'text-slate-400');
+                    });
+
+                    btn.classList.remove('border-slate-700', 'bg-slate-800', 'text-slate-400');
+                    btn.classList.add('border-yellow-400', 'bg-yellow-400/20', 'text-yellow-300');
+
+                    kerupukEngine.setFlavor(flavor);
+                });
+            });
+
+            // Start Game Button
+            document.getElementById('btn-start').addEventListener('click', () => {
+                const nameInput = document.getElementById('input-name').value.trim();
+                const regionInput = document.getElementById('input-region').value.trim();
+
+                if (!nameInput) {
+                    showCustomToast('Harap masukkan nama pejuang kamu!');
+                    return;
+                }
+
+                APP_STATE.playerName = nameInput;
+                APP_STATE.region = regionInput || 'Warga Merdeka';
+                sound.init();
+
+                startCountdown();
+            });
+
+            // Tap Trigger on Cracker Container
+            const crackerContainer = document.getElementById('cracker-container');
+            crackerContainer.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                handleTap(e);
+            });
+
+            // Tap Trigger on Fly Obstacle
+            const flyElement = document.getElementById('fly-obstacle');
+            flyElement.addEventListener('pointerdown', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                handleFlyHit(e);
+            });
+
+            // Sound & Music Toggles
+            document.getElementById('btn-sound').addEventListener('click', () => {
+                sound.isMutedSFX = !sound.isMutedSFX;
+                const icon = document.getElementById('icon-sound');
+                icon.setAttribute('data-lucide', sound.isMutedSFX ? 'volume-x' : 'volume-2');
+                lucide.createIcons();
+            });
+
+            document.getElementById('btn-music').addEventListener('click', () => {
+                sound.isMutedBGM = !sound.isMutedBGM;
+                const icon = document.getElementById('icon-music');
+                icon.setAttribute('data-lucide', sound.isMutedBGM ? 'disc' : 'music');
+                if (!sound.isMutedBGM) sound.startBGM();
+                else sound.stopBGM();
+                lucide.createIcons();
+            });
+
+            // Leaderboard Modals
+            document.getElementById('btn-leaderboard').addEventListener('click', openLeaderboard);
+            document.getElementById('btn-close-lb').addEventListener('click', () => {
+                document.getElementById('modal-leaderboard').classList.add('hidden');
+            });
+            document.getElementById('btn-clear-lb').addEventListener('click', () => {
+                localStorage.removeItem('lomba_kerupuk_scores');
+                openLeaderboard();
+            });
+
+            // Results Navigation
+            document.getElementById('btn-replay').addEventListener('click', () => {
+                startCountdown();
+            });
+            document.getElementById('btn-home').addEventListener('click', () => {
+                setView('IDLE');
+            });
+
+            // Export Certificate
+            document.getElementById('btn-share').addEventListener('click', exportCertificate);
+            document.getElementById('btn-close-share').addEventListener('click', () => {
+                document.getElementById('modal-share').classList.add('hidden');
+            });
+        }
+
+        /* Countdown Phase */
+        function startCountdown() {
+            setView('COUNTDOWN');
+            sound.startBGM();
+
+            let count = 3;
+            const el = document.getElementById('countdown-num');
+            el.innerText = count;
+            sound.playBeep(false);
+
+            const interval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    el.innerText = count;
+                    sound.playBeep(false);
+                } else {
+                    clearInterval(interval);
+                    sound.playWhistle();
+                    startGameplay();
+                }
+            }, 1000);
+        }
+
+        /* Gameplay Phase */
+        function startGameplay() {
+            APP_STATE.score = 0;
+            APP_STATE.combo = 0;
+            APP_STATE.timeLeft = 15;
+            APP_STATE.lastTapTime = Date.now();
+            APP_STATE.isFever = false;
+            APP_STATE.feverProgress = 0;
+
+            document.getElementById('score-val').innerText = '0';
+            document.getElementById('timer-val').innerText = '15s';
+            document.getElementById('tps-val').innerText = '0.0 TPS';
+            document.getElementById('fever-bar-fill').style.width = '0%';
+            document.getElementById('fly-obstacle').classList.add('hidden');
+
+            kerupukEngine.eatenRatio = 0;
+            setView('PLAYING');
+
+            // Timer Loop
+            APP_STATE.timerInterval = setInterval(() => {
+                APP_STATE.timeLeft--;
+                document.getElementById('timer-val').innerText = APP_STATE.timeLeft + 's';
+
+                const elapsed = 15 - APP_STATE.timeLeft;
+                APP_STATE.tps = elapsed > 0 ? (APP_STATE.score / elapsed).toFixed(1) : 0;
+                document.getElementById('tps-val').innerText = APP_STATE.tps + ' TPS';
+
+                // Faster Decay of Fever progress (Harder difficulty)
+                if (APP_STATE.feverProgress > 0) {
+                    APP_STATE.feverProgress = Math.max(0, APP_STATE.feverProgress - 22);
+                    document.getElementById('fever-bar-fill').style.width = APP_STATE.feverProgress + '%';
+                }
+
+                if (APP_STATE.timeLeft <= 0) {
+                    clearInterval(APP_STATE.timerInterval);
+                    clearInterval(APP_STATE.flyInterval);
+                    clearInterval(APP_STATE.windInterval);
+                    finishGame();
+                }
+            }, 1000);
+
+            // Random Wind Gusts Event Interval (Every 3-4s)
+            APP_STATE.windInterval = setInterval(() => {
+                if (APP_STATE.view !== 'PLAYING') return;
+
+                if (Math.random() < 0.65) {
+                    const windForce = (Math.random() - 0.5) * 0.025;
+                    kerupukEngine.applyWind(windForce);
+
+                    const windWarn = document.getElementById('wind-warning');
+                    windWarn.style.opacity = '1';
+                    setTimeout(() => windWarn.style.opacity = '0', 1200);
+                }
+            }, 3200);
+
+            // Random Fly Obstacle Spawner (Every 2.5s)
+            APP_STATE.flyInterval = setInterval(() => {
+                if (APP_STATE.view !== 'PLAYING') return;
+
+                if (Math.random() < 0.6) {
+                    spawnFly();
+                }
+            }, 2500);
+        }
+
+        /* Spawn Fly Obstacle near kerupuk */
+        function spawnFly() {
+            const fly = document.getElementById('fly-obstacle');
+            const playground = document.getElementById('game-playground');
+            const rect = playground.getBoundingClientRect();
+
+            // Random position inside the playground area
+            const randomX = Math.random() * (rect.width - 60) + 30;
+            const randomY = Math.random() * (rect.height - 80) + 40;
+
+            fly.style.left = `${randomX}px`;
+            fly.style.top = `${randomY}px`;
+            fly.classList.remove('hidden');
+
+            // Fly stays for 1.8 seconds then disappears
+            setTimeout(() => {
+                fly.classList.add('hidden');
+            }, 1800);
+        }
+
+        /* Tap Penalty when user accidentally hits Lalat */
+        function handleFlyHit(e) {
+            if (APP_STATE.view !== 'PLAYING') return;
+
+            sound.playError();
+            if (navigator.vibrate) navigator.vibrate([40, 30, 40]);
+
+            // Penalty -3 score & reset combo
+            APP_STATE.score = Math.max(0, APP_STATE.score - 3);
+            APP_STATE.combo = 0;
+            APP_STATE.feverProgress = Math.max(0, APP_STATE.feverProgress - 40);
+
+            document.getElementById('score-val').innerText = APP_STATE.score;
+            document.getElementById('fever-bar-fill').style.width = APP_STATE.feverProgress + '%';
+            document.getElementById('fly-obstacle').classList.add('hidden');
+
+            // Floating -3 Penalty Text
+            const container = document.getElementById('hit-popups-container');
+            const rect = container.getBoundingClientRect();
+            const x = e ? (e.clientX - rect.left) : rect.width / 2;
+            const y = e ? (e.clientY - rect.top) : rect.height / 2;
+
+            const popup = document.createElement('div');
+            popup.className = 'floating-hit animate-floatText text-red-500 text-3xl font-black';
+            popup.innerText = '-3 🪰 Awas Lalat!';
+            popup.style.left = `${x}px`;
+            popup.style.top = `${y}px`;
+
+            container.appendChild(popup);
+            setTimeout(() => popup.remove(), 700);
+        }
+
+        /* Tap Engine with Fever Mode & Visual Effects */
+        function handleTap(e) {
+            if (APP_STATE.view !== 'PLAYING') return;
+
+            const now = Date.now();
+            const timeDiff = now - APP_STATE.lastTapTime;
+            APP_STATE.lastTapTime = now;
+
+            // Haptic Feedback
+            if (navigator.vibrate) navigator.vibrate(15);
+
+            // Apply pendulum sway physics
+            kerupukEngine.applyTapForce();
+
+            // Sound FX
+            sound.playCrunch(APP_STATE.combo);
+
+            // Strict Combo logic (< 140ms for harder difficulty)
+            if (timeDiff < 140) {
+                APP_STATE.combo++;
+                APP_STATE.feverProgress = Math.min(100, APP_STATE.feverProgress + 10);
+            } else {
+                APP_STATE.combo = 0;
+            }
+
+            // Fever Trigger
+            if (APP_STATE.feverProgress >= 100 && !APP_STATE.isFever) {
+                APP_STATE.isFever = true;
+                sound.playCrowdCheer();
+                document.getElementById('app').classList.add('fever-mode-active', 'shake-screen');
+                setTimeout(() => {
+                    document.getElementById('app').classList.remove('shake-screen');
+                }, 300);
+            } else if (APP_STATE.feverProgress < 25 && APP_STATE.isFever) {
+                APP_STATE.isFever = false;
+                document.getElementById('app').classList.remove('fever-mode-active');
+            }
+
+            document.getElementById('fever-bar-fill').style.width = APP_STATE.feverProgress + '%';
+
+            // Point calculation (Fever = 2x)
+            const addedScore = APP_STATE.isFever ? 2 : 1;
+            APP_STATE.score += addedScore;
+
+            document.getElementById('score-val').innerText = APP_STATE.score;
+
+            // Combo Banner UI
+            const comboBanner = document.getElementById('combo-banner');
+            const comboText = document.getElementById('combo-text');
+            if (APP_STATE.isFever || APP_STATE.combo > 6) {
+                comboBanner.style.opacity = '1';
+                comboText.innerText = APP_STATE.isFever ? '🔥 FEVER MERDEKA 2x!' : `⚡ SPEED COMBO ${APP_STATE.combo}x!`;
+            } else {
+                comboBanner.style.opacity = '0';
+            }
+
+            // Redraw eaten cracker state
+            kerupukEngine.eatenRatio = APP_STATE.score / 130;
+
+            // Spawn Particles & Floating Score Text
+            spawnCrumbs(e);
+            spawnHitPopup(e, addedScore);
+        }
+
+        /* Floating Score Text Popups */
+        function spawnHitPopup(e, scoreAdded) {
+            const container = document.getElementById('hit-popups-container');
+            const rect = container.getBoundingClientRect();
+
+            const x = e ? (e.clientX - rect.left) : rect.width / 2;
+            const y = e ? (e.clientY - rect.top) : rect.height / 2;
+
+            const popup = document.createElement('div');
+            popup.className = 'floating-hit animate-floatText text-yellow-300 text-2xl';
+            popup.innerText = APP_STATE.isFever ? `+${scoreAdded} 🔥` : `+${scoreAdded}`;
+            popup.style.left = `${x}px`;
+            popup.style.top = `${y}px`;
+
+            container.appendChild(popup);
+            setTimeout(() => popup.remove(), 700);
+        }
+
+        /* Flying Crumb Particles */
+        function spawnCrumbs(e) {
+            const container = document.getElementById('cracker-container');
+            const rect = container.getBoundingClientRect();
+
+            const posX = e ? (e.clientX - rect.left) : rect.width / 2;
+            const posY = e ? (e.clientY - rect.top) : rect.height / 2;
+
+            let crumbColor = 'bg-amber-100 border-amber-300';
+            if (APP_STATE.flavor === 'udang') crumbColor = 'bg-yellow-300 border-amber-500';
+            if (APP_STATE.flavor === 'pedas') crumbColor = 'bg-red-400 border-red-600';
+
+            for (let i = 0; i < 6; i++) {
+                const crumb = document.createElement('div');
+                crumb.className = `crumb ${crumbColor} border`;
+
+                const size = Math.random() * 8 + 4;
+                crumb.style.width = `${size}px`;
+                crumb.style.height = `${size}px`;
+                crumb.style.left = `${posX}px`;
+                crumb.style.top = `${posY}px`;
+
+                const dx = (Math.random() - 0.5) * 140 + 'px';
+                const dy = (Math.random() * 120 + 30) + 'px';
+                const rot = (Math.random() * 360) + 'deg';
+
+                crumb.style.setProperty('--dx', dx);
+                crumb.style.setProperty('--dy', dy);
+                crumb.style.setProperty('--rot', rot);
+
+                container.appendChild(crumb);
+                setTimeout(() => crumb.remove(), 750);
+            }
+        }
+
+        /* Game Completion */
+        function finishGame() {
+            sound.playWhistle();
+            sound.playFanfare();
+            document.getElementById('app').classList.remove('fever-mode-active');
+
+            if (window.confetti) {
+                confetti({
+                    particleCount: 150,
+                    spread: 90,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            if (APP_STATE.score > APP_STATE.highScore) {
+                APP_STATE.highScore = APP_STATE.score;
+                localStorage.setItem('lomba_kerupuk_pb', APP_STATE.highScore);
+            }
+
+            saveToLeaderboard(APP_STATE.playerName, APP_STATE.score, APP_STATE.region);
+
+            // Populate Certificate
+            document.getElementById('cert-name').innerText = APP_STATE.playerName;
+            document.getElementById('cert-region').innerText = `📍 ${APP_STATE.region}`;
+            document.getElementById('cert-score').innerText = APP_STATE.score;
+            document.getElementById('cert-tps').innerText = `Rata-rata ${APP_STATE.tps} Tap / Detik`;
+
+            const titleInfo = calculateTitle(APP_STATE.score);
+            document.getElementById('cert-title').innerText = titleInfo.title;
+
+            setView('FINISHED');
+        }
+
+        function saveToLeaderboard(name, score, region) {
+            let scores = JSON.parse(localStorage.getItem('lomba_kerupuk_scores') || '[]');
+            scores.push({
+                name: name,
+                score: score,
+                region: region,
+                date: new Date().toLocaleDateString('id-ID')
+            });
+            scores.sort((a, b) => b.score - a.score);
+            scores = scores.slice(0, 5);
+            localStorage.setItem('lomba_kerupuk_scores', JSON.stringify(scores));
+        }
+
+        function openLeaderboard() {
+            const listContainer = document.getElementById('lb-list');
+            const scores = JSON.parse(localStorage.getItem('lomba_kerupuk_scores') || '[]');
+
+            listContainer.innerHTML = '';
+
+            if (scores.length === 0) {
+                listContainer.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">Belum ada rekor tersimpan.</p>';
+            } else {
+                scores.forEach((item, index) => {
+                    const row = document.createElement('div');
+                    row.className = 'flex items-center justify-between p-3 bg-slate-800/80 rounded-xl border border-slate-700/60';
+                    row.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 h-6 rounded-full font-game font-bold text-xs flex items-center justify-center ${index === 0 ? 'bg-yellow-400 text-red-950' : 'bg-slate-700 text-slate-300'}">
+                                ${index + 1}
+                            </span>
+                            <div class="text-left">
+                                <p class="text-xs font-bold text-white">${escapeHtml(item.name)}</p>
+                                <p class="text-[10px] text-slate-400">${escapeHtml(item.region)}</p>
+                            </div>
+                        </div>
+                        <span class="font-game font-black text-yellow-400 text-base">${item.score} <span class="text-[10px] font-sans font-normal text-slate-400">Tap</span></span>
+                    `;
+                    listContainer.appendChild(row);
+                });
+            }
+
+            document.getElementById('modal-leaderboard').classList.remove('hidden');
+        }
+
+        /* Certificate Exporter via HTML2Canvas */
+        async function exportCertificate() {
+            const shareBtn = document.getElementById('btn-share');
+            const originalText = shareBtn.innerHTML;
+            shareBtn.innerText = '⌛ Memproses Gambar HD...';
+            shareBtn.disabled = true;
+
+            const certNode = document.getElementById('certificate-story');
+
+            try {
+                const canvas = await html2canvas(certNode, {
+                    scale: 3,
+                    useCORS: true,
+                    backgroundColor: '#7F1D1D',
+                    logging: false
+                });
+
+                const dataUrl = canvas.toDataURL('image/png');
+                const res = await fetch(dataUrl);
+                const blob = await res.blob();
+                const fileName = `Sertifikat-17an-${APP_STATE.playerName.replace(/\s+/g, '_')}.png`;
+                const file = new File([blob], fileName, { type: 'image/png' });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: 'Sertifikat Lomba Makan Kerupuk 17-an',
+                        text: `Gue dapet ${APP_STATE.score} gigitan di Lomba Makan Kerupuk HUT RI ke-81! Cobain di lomba-81.vercel.app 🇲🇨`
+                    });
+                } else {
+                    const imgPreviewContainer = document.getElementById('share-img-preview');
+                    imgPreviewContainer.innerHTML = `<img src="${dataUrl}" class="max-h-64 rounded-lg shadow-md" alt="Sertifikat">`;
+
+                    const downloadBtn = document.getElementById('btn-download-img');
+                    downloadBtn.href = dataUrl;
+                    downloadBtn.download = fileName;
+
+                    document.getElementById('modal-share').classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error('Export Error:', err);
+                showCustomToast('Gagal memproses sertifikat.');
+            } finally {
+                shareBtn.innerHTML = originalText;
+                shareBtn.disabled = false;
+            }
+        }
+
+        function showCustomToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 border border-yellow-400 text-yellow-300 font-bold text-xs px-4 py-2.5 rounded-2xl shadow-2xl z-50 animate-pop font-game';
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+    </script>
+</body>
+</html>

@@ -21,7 +21,8 @@ export async function shareOrDownloadCertificate(elementId, playerName, score) {
 
     const response = await fetch(dataUrl);
     const blob = await response.blob();
-    const fileName = `Sertifikat-17an-${playerName.replace(/\\s+/g, '_')}.png`;
+    const safeName = (playerName || 'Pemain_Merdeka').replace(/\s+/g, '_');
+    const fileName = `Sertifikat-17an-${safeName}.png`;
     const file = new File([blob], fileName, { type: 'image/png' });
 
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
