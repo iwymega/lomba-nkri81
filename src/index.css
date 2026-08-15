@@ -330,7 +330,8 @@ input {
 
 .kerupuk-scene,
 .race-scene,
-.tug-scene {
+.tug-scene,
+.relay-scene {
   position: relative;
   overflow: hidden;
   border-radius: 30px;
@@ -672,4 +673,259 @@ input {
   border-radius: 999px;
   background: white;
   box-shadow: 0 0 14px rgba(255, 255, 255, 0.5);
+}
+
+.relay-scene {
+  min-height: 336px;
+  background: linear-gradient(180deg, #6b1b22 0%, #371216 52%, #211113 100%);
+}
+
+.relay-scene-slip {
+  box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.38), inset 0 0 26px rgba(220, 38, 38, 0.14);
+}
+
+.relay-scene-pass {
+  box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.38), inset 0 0 28px rgba(250, 204, 21, 0.12);
+}
+
+.relay-sky {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 14%, rgba(255, 237, 164, 0.22), transparent 20%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 26%);
+}
+
+.relay-oval-track {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: 18px;
+  height: 136px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #c96e39, #8c451f);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.12);
+}
+
+.relay-oval-inner {
+  position: absolute;
+  inset: 18px 28px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255,255,255,0.12), transparent 30%),
+    linear-gradient(180deg, #285c32, #16341d);
+}
+
+.relay-oval-lane {
+  position: absolute;
+  inset: 8px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+}
+
+.relay-oval-lane-2 {
+  inset: 18px;
+}
+
+.relay-oval-lane-3 {
+  inset: 28px;
+}
+
+.relay-lap-gate {
+  position: absolute;
+  right: 26px;
+  top: 20px;
+  bottom: 20px;
+  width: 8px;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, #fff 0 16%, #111 16% 32%, #fff 32% 48%, #111 48% 64%, #fff 64% 80%, #111 80% 100%);
+}
+
+.relay-lap-runner {
+  position: absolute;
+  top: 58px;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 35%, #fff8d1, #facc15 60%, #ef4444);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.26);
+}
+
+.relay-lap-badges {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: -14px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.relay-lap-badge {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(20, 8, 11, 0.82);
+  padding: 5px 4px;
+  text-align: center;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.relay-lap-badge-active {
+  border-color: rgba(250, 204, 21, 0.5);
+  color: #fde68a;
+}
+
+.relay-lap-badge-done {
+  color: rgba(250, 204, 21, 0.88);
+}
+
+.relay-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 20px;
+  height: 108px;
+  background: linear-gradient(180deg, #ca7d42, #84461f);
+  border-top: 3px solid rgba(255, 255, 255, 0.24);
+}
+
+.relay-lanes {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 20px;
+  height: 108px;
+  background:
+    linear-gradient(180deg, transparent 0 30%, rgba(255,255,255,0.18) 30% 32%, transparent 32% 64%, rgba(255,255,255,0.18) 64% 66%, transparent 66%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0 26px, transparent 26px 52px);
+}
+
+.relay-checkpoint,
+.relay-finish-line {
+  position: absolute;
+  bottom: 20px;
+  width: 2px;
+  height: 108px;
+  background: rgba(255, 255, 255, 0.34);
+}
+
+.relay-finish-line {
+  left: calc(100% - 10px);
+  width: 10px;
+  background:
+    linear-gradient(180deg, #fff 0 14%, #111 14% 28%, #fff 28% 42%, #111 42% 56%, #fff 56% 70%, #111 70% 84%, #fff 84% 100%);
+}
+
+.relay-runner {
+  position: absolute;
+  bottom: 64px;
+  width: 48px;
+  height: 96px;
+  transition: left 0.14s ease-out;
+}
+
+.relay-runner-body {
+  position: absolute;
+  inset: 0;
+  animation: float 2.2s ease-in-out infinite;
+}
+
+.relay-runner-body::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 12px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #ffe3c4;
+}
+
+.relay-runner-body::after {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 28px;
+  width: 28px;
+  height: 44px;
+  border-radius: 18px 18px 12px 12px;
+  background: linear-gradient(180deg, #facc15, #dc2626);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.22);
+}
+
+.relay-runner-body-run {
+  animation: jump 0.36s ease-in-out infinite;
+}
+
+.relay-runner-baton {
+  position: absolute;
+  right: 3px;
+  top: 38px;
+  width: 16px;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #fff7d1, #f59e0b);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18);
+}
+
+.relay-banner,
+.relay-meter-shell {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  border-radius: 22px;
+  background: rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(12px);
+}
+
+.relay-banner {
+  top: 168px;
+  padding: 12px;
+}
+
+.relay-meter-shell {
+  bottom: 14px;
+  padding: 12px 12px 14px;
+}
+
+.relay-meter-track {
+  position: relative;
+  height: 16px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.relay-meter-good-zone,
+.relay-meter-perfect-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.relay-meter-good-zone {
+  left: 34%;
+  width: 32%;
+  background: rgba(250, 204, 21, 0.26);
+}
+
+.relay-meter-perfect-zone {
+  left: 44%;
+  width: 12%;
+  background: rgba(250, 204, 21, 0.72);
+}
+
+.relay-meter-pointer {
+  position: absolute;
+  top: -4px;
+  width: 14px;
+  height: 24px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #fff, #f87171);
+  transform: translateX(-50%);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
 }

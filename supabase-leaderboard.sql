@@ -1,6 +1,6 @@
 create table if not exists public.leaderboard_entries (
   id bigint generated always as identity primary key,
-  game_key text not null check (game_key in ('kerupuk', 'karung', 'tarik')),
+  game_key text not null check (game_key in ('kerupuk', 'karung', 'tarik', 'estafet')),
   player_name text not null check (char_length(player_name) between 2 and 32),
   region text,
   score integer not null check (score between -100 and 1000),
@@ -29,3 +29,10 @@ with check (
   score between -100 and 1000
   and char_length(player_name) between 2 and 32
 );
+
+alter table public.leaderboard_entries
+  drop constraint if exists leaderboard_entries_game_key_check;
+
+alter table public.leaderboard_entries
+  add constraint leaderboard_entries_game_key_check
+  check (game_key in ('kerupuk', 'karung', 'tarik', 'estafet'));

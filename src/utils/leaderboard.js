@@ -6,6 +6,7 @@ export const GAME_KEYS = {
   kerupuk: 'kerupuk',
   karung: 'karung',
   tarik: 'tarik',
+  estafet: 'estafet',
 };
 
 export function isLeaderboardConfigured() {

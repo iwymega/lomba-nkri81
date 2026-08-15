@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ChevronLeft, MapPin, Play, Sparkles, Trophy, User } from 'lucide-react';
 import KerupukGame from './components/KerupukGame';
+import RelayRaceGame from './components/RelayRaceGame';
 import SackRaceGame from './components/SackRaceGame';
 import TugOfWarGame from './components/TugOfWarGame';
 import { fetchLeaderboard, isLeaderboardConfigured } from './utils/leaderboard';
@@ -29,6 +30,14 @@ const GAME_LIBRARY = {
     strap: 'Timing power meter yang lebih cepat dan zona emas yang sempit.',
     highlight: 'Tantangan utama: presisi tinggi, miss sedikit langsung kena penalti.',
     component: TugOfWarGame,
+  },
+  estafet: {
+    id: 'estafet',
+    name: 'Lari Estafet',
+    emoji: '🏁',
+    strap: 'Gabungkan ritme langkah kiri-kanan dan timing oper baton di zona sempit.',
+    highlight: 'Tantangan utama: arena tersulit, salah ritme atau salah oper langsung buang momentum.',
+    component: RelayRaceGame,
   },
 };
 
@@ -265,7 +274,7 @@ export default function App() {
 
           <section className="grid grid-cols-3 gap-2">
             <div className="festival-mini-stat">
-              <span>3</span>
+              <span>4</span>
               Arena aktif
             </div>
             <div className="festival-mini-stat">
